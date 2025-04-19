@@ -2,5 +2,6 @@
 
 #ignore log
 log.txt
-#ignore downloads folder to prevent duplicate files
+#ignore downloads folder to prevent duplicate files, but don't ignore example so folder still exists
 downloads/*
+!downloads/hello.txt
