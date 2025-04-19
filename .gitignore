@@ -8,3 +8,5 @@ downloads/*
 
 #ignore names list
 names.txt
+
+__pycache__/
