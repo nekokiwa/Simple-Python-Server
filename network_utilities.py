@@ -7,24 +7,29 @@ import os
 
 def load_names(client_names, filename):
     """loads the names from file into client names list"""
-    with open(filename,'r') as file:
-        lines = file.readlines()
-        for line in lines: #each name is separated by lineberaks, one name per line
-            ip = ""
-            name = ""
-            getting_ip = True
-            for char in line:
-                if getting_ip:
-                    if char == ':': #ip separated from name by a colon
-                        getting_ip = False
+    try:
+        with open(filename,'r') as file:
+            lines = file.readlines()
+            for line in lines: #each name is separated by lineberaks, one name per line
+                ip = ""
+                name = ""
+                getting_ip = True
+                for char in line:
+                    if getting_ip:
+                        if char == ':': #ip separated from name by a colon
+                            getting_ip = False
+                        else:
+                            ip += char
                     else:
-                        ip += char
-                else:
-                    if char == '\n':
-                        break
-                name += char
-            if not getting_ip: # check to make sure ip was successfully parsed
-                client_names.append(ClientName(ip,name))
+                        if char == '\n':
+                            break
+                    name += char
+                if not getting_ip: # check to make sure ip was successfully parsed
+                    client_names.append(ClientName(ip,name))
+    except FileNotFoundError as fnf:
+        #create names.txt if it doesn't exist
+        open(filename, "w").close()
+        load_names(client_names, filename)
 
 def log_message(log_file:str,message:str):
     """logs a message in the given file and prints to the console"""
