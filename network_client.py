@@ -25,7 +25,7 @@ def main():
     nonlocal to_close
     try:
       while True:#receive message
-        msg = s.recv(1024).decode('utf-8')
+        msg = s.recv(RECEIVE_BUFFER).decode('utf-8')
         if not msg:
           pass#do nothing if no message received
         print(f'received message: {msg}')
