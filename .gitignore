@@ -3,4 +3,4 @@
 #ignore log
 log.txt
 #ignore downloads folder to prevent duplicate files
-downloads/
+downloads/*
