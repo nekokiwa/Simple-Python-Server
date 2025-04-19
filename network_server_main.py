@@ -16,7 +16,7 @@ def main():
     client_names = []
     connected_clients = []
     load_names(client_names, NAMES_FILE)
-    port = 1234
+    port = PORT_TO_USE
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = socket.gethostname()
     log_message(LOG_FILE,f'\n##########################\nstarting new session with:\nip:{host}||port:{port}')

@@ -1,4 +1,6 @@
 
+
+PORT_TO_USE = 1234
 PPERCENT_INTERVAL = 5
 UNSET_NAME_MSG = "name not set for ip:{}"
 ACCESSIBLE_FILES_FOLDER = "downloadable/"
