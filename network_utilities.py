@@ -70,10 +70,10 @@ def get_name(addr:tuple, client_names:list[ClientName]) -> str:
     for client_name in client_names:
         if client_name.ip == addr[0]:
             return client_name.name
-    return UNSET_NAME_MSG
+    return UNSET_NAME_MSG.format(addr[0])
 
 def has_name(addr:tuple, client_names) -> bool:
-    return get_name(addr, client_names) != UNSET_NAME_MSG
+    return get_name(addr, client_names) != UNSET_NAME_MSG.format(addr[0])
 
 def save_names(client_names):
     """saves client names to file"""

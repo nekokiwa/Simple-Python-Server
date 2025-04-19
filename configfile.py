@@ -1,6 +1,6 @@
 
 PPERCENT_INTERVAL = 5
-UNSET_NAME_MSG = f"name not set for ip:{addr[0]}"
+UNSET_NAME_MSG = f"name not set for ip:{}"
 ACCESSIBLE_FILES_FOLDER = "downloadable/"
 FILESENDINGBUFFER = 2048
 RECEIVE_BUFFER = 1024
