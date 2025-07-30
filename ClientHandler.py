@@ -8,7 +8,7 @@ from ClientName import *
 from network_utilities import *
 
 class ClientHandler:
-    def __init__(self,holder:ClientHolder, connected_clients, client_names) -> None:
+    def __init__(self, holder:ClientHolder, connected_clients, client_names) -> None:
         self.holder = holder
         self.has_client = True
         #automatically start handling client
@@ -24,14 +24,14 @@ class ClientHandler:
         try:
             self.holder.sock.close()
         except OSError:
-            log_message(f'os error closing thread handling {addr}. ignoring')
-        log_message(LOG_FILE,f"connection with {addr} closed by thread")
+            log_message(LOG_FILE, f'os error closing thread handling {addr}. ignoring')
+        log_message(LOG_FILE, f"connection with {addr} closed by thread")
 
     def send_msg(self, to_send:str):
         """wrapper function to send a message to the client being handled"""
         send_message(to_send,self.holder.sock,self.holder.addr)
 
-    def handle_command(self,cmd:str, client_names) -> str:
+    def handle_command(self, cmd:str, client_names) -> str:
         """handles the given command and returns the message to send"""
         addr = self.holder.addr
         client = self.holder.sock
@@ -133,19 +133,19 @@ class ClientHandler:
                     break
 
                 #handle receieved messages
-                log_message(LOG_FILE,f"received message from {addr}: {msg}")
+                log_message(LOG_FILE, f"received message from {addr}: {msg}")
                 if msg == "close":
                     #special case for closing connection
                     self.send_msg('close')
-                    self.close_client()
+                    self.close_client(connected_clients)
                 else:
                     to_send = self.handle_command(msg, client_names)
                     self.send_msg(to_send)
                     if to_send == 'close':
-                        self.close_client()
+                        self.close_client(connected_clients)
         except Exception as x:
             #log error without crashing main
-            log_message(LOG_FILE,f"\nException ({x}) raised in thread handling client at: {addr}\nTRACE:\n{traceback.format_exc()}\n")
+            log_message(LOG_FILE, f"\nException ({x}) raised in thread handling client at: {addr}\nTRACE:\n{traceback.format_exc()}\n")
             try:
                 client.close()
             except Exception as x2:
@@ -153,4 +153,4 @@ class ClientHandler:
                 log_message(LOG_FILE, f"Second exception ({x}) when closing: {addr}")
             self.close_client(connected_clients)
         finally:
-            log_message(LOG_FILE,f"closed thread handling: {addr}")
+            log_message(LOG_FILE, f"closed thread handling: {addr}")
