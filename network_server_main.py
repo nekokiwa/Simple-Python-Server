@@ -46,7 +46,7 @@ def main():
             #close program on interrupt
             sys.exit()
         except Exception as x:
-            #log any errors but don't crash UNLESS MEANT TO STOP PROGRAM
+            #log any errors but don't crash if we don't need to
             log_message(LOG_FILE,f"exception: ({x}) happened in main code...")
             pass
 

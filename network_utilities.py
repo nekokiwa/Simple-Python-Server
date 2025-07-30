@@ -27,7 +27,7 @@ def load_names(client_names, filename):
                 if not getting_ip: # check to make sure ip was successfully parsed
                     client_names.append(ClientName(ip,name))
     except FileNotFoundError as fnf:
-        #create names.txt if it doesn't exist
+        #create names.txt if it doesn't exist and retry
         open(filename, "w").close()
         load_names(client_names, filename)
 
