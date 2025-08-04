@@ -101,7 +101,6 @@ def get_port() -> int:
     while True:
         try:
             port = input("enter a port number:\n")
-            #TODO add more input checks for out of range ports
             port = int(port)
             if port < 0 or port > 65535:
                 raise ValueError
