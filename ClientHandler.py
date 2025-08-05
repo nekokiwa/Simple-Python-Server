@@ -35,7 +35,7 @@ class ClientHandler:
         """wrapper function to receive a message from the client being handled"""
         client = self.holder.sock
         msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
-        log_message(LOG_FILE, msg)
+        log_message(LOG_FILE, f"received: ({msg}) from client")
         return msg
 
     def handle_command(self, cmd:str, client_names) -> str:
@@ -140,7 +140,6 @@ class ClientHandler:
                     break
 
                 #handle receieved messages
-                log_message(LOG_FILE, f"received message from {addr}: {msg}")
                 if msg == "close":
                     #special case for closing connection
                     self.send_msg('close')
