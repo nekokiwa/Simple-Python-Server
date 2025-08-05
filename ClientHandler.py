@@ -93,13 +93,13 @@ class ClientHandler:
 
                         #only initiate transfer if handshake completes properly
                         if self.recv_msg() != 'ready':
-                            message = "file transfer cancelled or failed."
+                            message = "File transfer cancelled or failed."
                         else: 
                             send_file(path, client, addr)
                             message = "\n\nFile transfer finished!"
                         needs_name = False
                     except FileNotFoundError as fnf:
-                        self.send_msg("File does not exist")
+                        self.send_msg("File transfer failed: File does not exist")
             case 'cat gay':
                 # :3
                 message = "mrow mrow mrrrp nya :3"
