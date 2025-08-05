@@ -30,6 +30,13 @@ class ClientHandler:
     def send_msg(self, to_send:str):
         """wrapper function to send a message to the client being handled"""
         send_message(to_send,self.holder.sock,self.holder.addr)
+    
+    def recv_msg(self):
+        """wrapper function to receive a message from the client being handled"""
+        client = self.holder.sock
+        msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
+        log_message(LOG_FILE, msg)
+        return msg
 
     def handle_command(self, cmd:str, client_names) -> str:
         """handles the given command and returns the message to send"""
@@ -44,7 +51,7 @@ class ClientHandler:
                 needs_name = True
                 while needs_name:
                     self.send_msg("please enter the name you want to set for your ip address")
-                    msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
+                    msg = self.recv_msg()
                     add_name(addr, msg, client_names)
                     needs_name = False
                     message = f"name set to: {msg}"
@@ -67,7 +74,7 @@ class ClientHandler:
                 needs_name = True
                 while needs_name:
                     self.send_msg("please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
-                    filename = client.recv(RECEIVE_BUFFER).decode('utf-8')
+                    filename = self.recv_msg()
 
                     if filename == "CANCEL":
                         #cancel getting name
@@ -85,7 +92,7 @@ class ClientHandler:
                         self.send_msg(str(filesize))
 
                         #only initiate transfer if handshake completes properly
-                        if client.recv(RECEIVE_BUFFER).decode('utf-8') != 'ready':
+                        if self.recv_msg() != 'ready':
                             message = "file transfer cancelled or failed."
                         else: 
                             send_file(path, client, addr)
@@ -127,7 +134,7 @@ class ClientHandler:
             #loop for as long as client is connected
             while self.has_client:
                 #check for messages
-                msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
+                msg = self.recv_msg()
                 if not msg:
                     #do nothing if no message sent
                     break
