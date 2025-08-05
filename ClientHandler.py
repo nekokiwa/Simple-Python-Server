@@ -45,10 +45,6 @@ class ClientHandler:
                 while needs_name:
                     self.send_msg("please enter the name you want to set for your ip address")
                     msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
-                    if not msg:
-                        #TODO is this even necessary?
-                        #do nothing if no message sent
-                        break
                     add_name(addr, msg, client_names)
                     needs_name = False
                     message = f"name set to: {msg}"
@@ -70,11 +66,12 @@ class ClientHandler:
             case 'download':
                 needs_name = True
                 while needs_name:
-                    self.send_msg("please enter the name of the file to download, including the extension")
+                    self.send_msg("please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
                     filename = client.recv(RECEIVE_BUFFER).decode('utf-8')
-                    if not filename:
-                        #TODO is this even necessary?
-                        #do nothing if no message sent
+
+                    if filename == "CANCEL":
+                        #cancel getting name
+                        needs_name = False
                         break
                 
                     #initiate transfer handshake 
@@ -83,16 +80,19 @@ class ClientHandler:
 
                     #get and send filesize to client
                     path = ACCESSIBLE_FILES_FOLDER + filename
-                    filesize = os.stat(path).st_size
-                    self.send_msg(str(filesize))
+                    try:
+                        filesize = os.stat(path).st_size
+                        self.send_msg(str(filesize))
 
-                    #only initiate transfer if handshake completes properly
-                    if client.recv(RECEIVE_BUFFER).decode('utf-8') != 'ready':
-                        message = "file transfer cancelled or failed."
-                    else: 
-                        send_file(path, client, addr)
-                        message = "\n\nFile transfer finished!"
-                    needs_name = False
+                        #only initiate transfer if handshake completes properly
+                        if client.recv(RECEIVE_BUFFER).decode('utf-8') != 'ready':
+                            message = "file transfer cancelled or failed."
+                        else: 
+                            send_file(path, client, addr)
+                            message = "\n\nFile transfer finished!"
+                        needs_name = False
+                    except FileNotFoundError as fnf:
+                        self.send_msg("File does not exist")
             case 'cat gay':
                 # :3
                 message = "mrow mrow mrrrp nya :3"
