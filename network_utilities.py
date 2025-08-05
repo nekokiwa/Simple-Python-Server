@@ -134,25 +134,36 @@ def recv_file(server:SocketType, FILESENDINGBUFFER:int):
     """receives a file from the server"""
     print('receiving file')
     filename = server.recv(RECEIVE_BUFFER).decode('utf-8')
-    filesize = int(server.recv(RECEIVE_BUFFER).decode('utf-8'))
-    server.send('ready'.encode('utf-8'))
-    print('sent ready')
-    current_prog = 0
+    filesize = "NULL"
+    try:
+        filesize = server.recv(RECEIVE_BUFFER).decode('utf-8')
+        filesize = int(filesize)
 
-    #downloads folder needs to be already created to work
-    with open(('downloads/' + filename), 'wb') as file:
-        print('file open')
-        num = 0
-        while num < filesize:
-            contents = server.recv(FILESENDINGBUFFER)
-            if len(contents) > filesize - num:
-                contents = contents[:filesize - num]
-            num += file.write(contents)
+        if filesize <= 0:
+            #cancel on invalid filesize
+            raise ValueError
+        
+        server.send('ready'.encode('utf-8'))
+        print('sent ready')
+        current_prog = 0
 
-            prog_percent = (num / filesize * 100)
-            if prog_percent // PPERCENT_INTERVAL > current_prog // PPERCENT_INTERVAL:
-                current_prog = (prog_percent // PPERCENT_INTERVAL) * PPERCENT_INTERVAL
-                print(f"downloaded {current_prog}%...")
-        print('\ndone recieving\n')
+        #downloads folder needs to be already created to work
+        with open(('downloads/' + filename), 'wb') as file:
+            print('file open')
+            num = 0
+            while num < filesize:
+                contents = server.recv(FILESENDINGBUFFER)
+                if len(contents) > filesize - num:
+                    contents = contents[:filesize - num]
+                num += file.write(contents)
 
-    print(f'file closed after writing: {num}')
+                prog_percent = (num / filesize * 100)
+                if prog_percent // PPERCENT_INTERVAL > current_prog // PPERCENT_INTERVAL:
+                    current_prog = (prog_percent // PPERCENT_INTERVAL) * PPERCENT_INTERVAL
+                    print(f"downloaded {current_prog}%...")
+            print('\ndone recieving\n')
+
+        print(f'file closed after writing: {num}')
+    except ValueError as ve:
+        # server.send(f"invalid filezize: {filesize}".encode('UTF-8'))
+        log_message(LOG_FILE, f"invalid filezize: {filesize}")
