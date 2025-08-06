@@ -14,16 +14,16 @@ import sys
 def main():
     """setup and begin running the server"""
     #setup
-    client_names = []
-    connected_clients = []
+    client_names:list[ClientName] = []
+    connected_clients:list[ClientHolder] = []
     load_names(client_names, NAMES_FILE)
-    port = PORT_TO_USE
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostname()
+    port:int = PORT_TO_USE
+    s:SocketType = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host:str = socket.gethostname()
     log_message(LOG_FILE,f'\n##########################\nstarting new session with:\nip:{host}||port:{port}')
     s.bind((host,port))
     s.listen(100)
-    running = True
+    running:bool = True
   
     #called on script exit
     @atexit.register
