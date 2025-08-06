@@ -8,7 +8,11 @@ from ClientName import *
 from network_utilities import *
 
 class ClientHandler:
+    """object that handles a client connection including sending and receieving messages"""
+
     def __init__(self, holder:ClientHolder, connected_clients, client_names) -> None:
+        """initialise client handler with server and client info and start handling the client"""
+
         self.holder = holder
         self.has_client = True
         #automatically start handling client
@@ -160,6 +164,6 @@ class ClientHandler:
                 log_message(LOG_FILE, f"Second exception ({x}) when closing: {addr}")
 
             self.close_client(connected_clients)
-            
+
         finally:
             log_message(LOG_FILE, f"closed thread handling: {addr}")
