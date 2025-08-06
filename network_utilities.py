@@ -5,7 +5,7 @@ from socket import SocketType
 import os
 
 
-def load_names(client_names, filename):
+def load_names(client_names:list[ClientName], filename):
     """loads the names from file into client names list"""
     try:
         with open(filename,'r') as file:
@@ -45,14 +45,14 @@ def unset(str_set:set[str]) -> str:
     return returnstr
 
 
-def saved_ips(client_names:list) -> list:
+def saved_ips(client_names:list[ClientName]) -> list:
     """returns a list of saved ips"""
     ips = []
     for client_name in client_names:
         ips.append(client_name.ip)
     return ips
 
-def add_name(addr, name, client_names):
+def add_name(addr, name, client_names:list[ClientName]):
     """adds a name for the ip in addr"""
     ip = addr[0]
     log_message(LOG_FILE,f"adding name ({name}) for ip: {ip}")
@@ -77,10 +77,11 @@ def get_name(addr:tuple, client_names:list[ClientName]) -> str:
             return client_name.name
     return UNSET_NAME_MSG.format(addr[0])
 
-def has_name(addr:tuple, client_names) -> bool:
+def has_name(addr:tuple, client_names:list[ClientName]) -> bool:
+    """check if an address has a name in client_names list"""
     return get_name(addr, client_names) != UNSET_NAME_MSG.format(addr[0])
 
-def save_names(client_names):
+def save_names(client_names:list[ClientName]):
     """saves client names to file"""
     with open(NAMES_FILE,'w') as file:
         for name in client_names:
