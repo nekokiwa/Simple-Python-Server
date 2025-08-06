@@ -39,7 +39,7 @@ class ClientHandler:
         """wrapper function to receive a message from the client being handled"""
         client = self.holder.sock
         msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
-        log_message(LOG_FILE, f"received: ({msg}) from client")
+        log_message(LOG_FILE, f"received: ({msg}) from {self.holder.addr}")
         return msg
 
     def handle_command(self, cmd:str, client_names) -> str:
