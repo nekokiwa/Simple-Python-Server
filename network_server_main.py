@@ -11,7 +11,8 @@ import atexit
 import sys
 
 
-def main():  
+def main():
+    """setup and begin running the server"""
     #setup
     client_names = []
     connected_clients = []
