@@ -12,6 +12,7 @@ import socket
 
 
 def main():
+    """setup client process and connect to a server defined by user input"""
     def message_reciever():
         """handles messages received from host"""
 
