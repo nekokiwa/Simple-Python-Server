@@ -149,6 +149,7 @@ class ClientHandler:
                     self.send_msg(to_send)
                     if to_send == 'close':
                         self.close_client(connected_clients)
+
         except Exception as x:
             #log error without crashing main
             log_message(LOG_FILE, f"\nException ({x}) raised in thread handling client at: {addr}\nTRACE:\n{traceback.format_exc()}\n")
@@ -157,6 +158,8 @@ class ClientHandler:
             except Exception as x2:
                 #don't crash main when closing client
                 log_message(LOG_FILE, f"Second exception ({x}) when closing: {addr}")
+
             self.close_client(connected_clients)
+            
         finally:
             log_message(LOG_FILE, f"closed thread handling: {addr}")
