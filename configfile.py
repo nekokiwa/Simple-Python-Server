@@ -9,6 +9,8 @@ FILESENDINGBUFFER = 2048
 RECEIVE_BUFFER = 1024
 LOG_FILE = 'log.txt'
 CLIENT_LOG_FILE = 'clientlog.txt'
+TEST_LOG_FILE = 'test files/testlog.txt'
+TEST_NAME_FILE = 'test files/testnames.txt'
 NAMES_FILE = 'names.txt'
 WELCOME_MSG = "Connection Succesful!"
 

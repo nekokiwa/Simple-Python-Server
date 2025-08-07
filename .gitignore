@@ -3,6 +3,7 @@
 #ignore log
 log.txt
 clientlog.txt
+testlog.txt
 #ignore downloads folders, but don't ignore example so folder still exists
 downloads/*
 !downloads/hello.txt
