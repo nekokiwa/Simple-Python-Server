@@ -1,6 +1,7 @@
 #release building
 build/
 dist/
+spec/
 *.spec
 make.bat
 
