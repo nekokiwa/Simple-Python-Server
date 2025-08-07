@@ -149,7 +149,7 @@ def recv_file(server:SocketType, FILESENDINGBUFFER:int):
         current_prog = 0
 
         #downloads folder needs to be already created to work
-        with open(('downloads/' + filename), 'wb') as file:
+        with open((DOWNLOADS_FOLDER + filename), 'wb') as file:
             print('file open')
             num = 0
             while num < filesize:
