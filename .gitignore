@@ -1,4 +1,8 @@
-
+#release building
+build/
+dist/
+*.spec
+make.bat
 
 #ignore log
 log.txt
