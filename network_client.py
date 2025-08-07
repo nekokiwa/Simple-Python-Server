@@ -29,7 +29,7 @@ def main():
                 msg = s.recv(RECEIVE_BUFFER).decode('utf-8')
                 if not msg:
                     pass#do nothing if no message received
-                print(f'received message: {msg}')
+                log_message(CLIENT_LOG_FILE, f'received message: {msg}')
                 if msg == 'close':
                     close()
                     break
@@ -37,13 +37,13 @@ def main():
                     recv_file(s, FILESENDINGBUFFER)
                 
         except Exception as x:
-            print(f"exception in message thread: {x}")
+            log_message(CLIENT_LOG_FILE, f"exception in message thread: {x}")
             close()
   
     #get ip and port
     host_ip = input("enter the ip to connect to:\n")
     port = get_port()
-    print(f"p:{port}||ip:{host_ip}")
+    log_message(CLIENT_LOG_FILE, f"p:{port}||ip:{host_ip}")
 
     #setup socket
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -69,7 +69,7 @@ def main():
             time.sleep(1) # wait one second to allow reply to be sent by server
       
         except KeyboardInterrupt as ki:
-            print(f"Process interrupted. this may have been done by the receiver thread or user themself. Exception: {ki}")
+            log_message(CLIENT_LOG_FILE, f"Process interrupted. this may have been done by the receiver thread or user themself. Exception: {ki}")
             break
 
 if __name__ == '__main__':
