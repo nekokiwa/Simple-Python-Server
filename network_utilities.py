@@ -166,7 +166,7 @@ def recv_file(server:SocketType, FILESENDINGBUFFER:int):
         print('sent ready')
         current_prog = 0
 
-        #downloads folder needs to be already created to work
+        os.makedirs(DOWNLOADS_FOLDER, exist_ok=True) #ensure downloads folder exists
         with open((DOWNLOADS_FOLDER + filename), 'wb') as file:
             print('file open')
             num = 0
