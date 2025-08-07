@@ -7,6 +7,7 @@ ACCESSIBLE_FILES_FOLDER = "downloadable/"
 FILESENDINGBUFFER = 2048
 RECEIVE_BUFFER = 1024
 LOG_FILE = 'log.txt'
+CLIENT_LOG_FILE = 'clientlog.txt'
 NAMES_FILE = 'names.txt'
 WELCOME_MSG = "Connection Succesful!"
 
