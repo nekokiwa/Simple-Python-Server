@@ -82,6 +82,7 @@ class ClientHandler:
 
                     if filename == "CANCEL":
                         #cancel getting name
+                        message = "download cancelled"
                         needs_name = False
                         break
                 
