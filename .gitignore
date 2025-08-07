@@ -12,4 +12,6 @@ downloadable/*
 #ignore names list
 names.txt
 
+#working and temp directories
 __pycache__/
+.vscode/
