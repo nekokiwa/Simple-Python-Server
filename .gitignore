@@ -8,9 +8,8 @@ make.bat
 #ignore log
 log.txt
 clientlog.txt
-#ignore downloads folders, but don't ignore example so folder still exists
+#ignore downloads folders, but keep example downloadable so it still exists
 downloads/*
-!downloads/hello.txt
 downloadable/*
 !downloadable/hello.txt
 
