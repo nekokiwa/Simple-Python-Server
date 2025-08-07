@@ -16,8 +16,8 @@ def main():
     """setup client process and connect to a server defined by user input"""
   
     #get ip and port
-    host_ip = input("enter the ip to connect to:\n")
-    port = get_port()
+    host_ip = get_ip()
+    port = get_port(CLIENT_LOG_FILE)
     log_message(CLIENT_LOG_FILE, f"----------------------\np:{port}||ip:{host_ip}")
 
     #setup socket

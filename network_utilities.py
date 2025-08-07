@@ -2,7 +2,7 @@
 from ClientName import ClientName
 from configfile import *
 from socket import SocketType
-import os
+import os, sys
 
 
 def load_names(client_names:list[ClientName], filename:str):
@@ -96,9 +96,27 @@ def send_message(to_send:str,client:SocketType,addr:tuple[str, int]):
     client.send(to_send.encode('utf-8'))
     log_message(LOG_FILE, f"sent message ({ORIG}) to {addr}")
 
+def get_ip() -> str:
+    """gets an ip from arguments if available, otherwise user input. has no ip checking"""
+    if len(sys.argv) >= 2:
+        return sys.argv[1]
+    else:
+        return input("enter the ip to connect to:\n")
   
-def get_port() -> int:
-    """gets an integer from user input to use as port"""
+def get_port(CLIENT_LOG_FILE) -> int:
+    """gets an integer from arguemnts or user input to use as port
+    tries arguments first, then user input"""
+
+    if len(sys.argv) >= 3:
+        try:
+            port = int(sys.argv[2])
+            if port < 0 or port > 65535:
+                raise ValueError
+            return port
+        except ValueError:
+            #invalid port argument
+            log_message(CLIENT_LOG_FILE, 'invalid ip from arguments, getting from user input')
+            pass
     while True:
         try:
             port = input("enter a port number:\n")
