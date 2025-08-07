@@ -35,7 +35,7 @@ def server_control(host, port, connected_clients, client_names):
                 print('clients list:')
                 for cli in connected_clients:
                     addr = cli.addr
-                    print(f"{i}:({get_name(addr)}:{addr})")
+                    print(f"{i}:({get_name(addr, client_names)}:{addr})")
                     i+=1
             case 'names':
                 print("saved names:")
