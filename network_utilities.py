@@ -1,7 +1,7 @@
 
 from ClientName import ClientName
 from configfile import *
-from socket import SocketType, _RetAddress
+from socket import SocketType
 import os
 
 
@@ -52,7 +52,7 @@ def saved_ips(client_names:list[ClientName]) -> list:
         ips.append(client_name.ip)
     return ips
 
-def add_name(addr:_RetAddress, name:str, client_names:list[ClientName]):
+def add_name(addr:tuple[str, int], name:str, client_names:list[ClientName]):
     """adds a name for the ip in addr"""
     ip = addr[0]
     log_message(LOG_FILE,f"adding name ({name}) for ip: {ip}")
@@ -68,7 +68,7 @@ def add_name(addr:_RetAddress, name:str, client_names:list[ClientName]):
     #save name changes to file
     save_names(client_names)
 
-def get_name(addr:_RetAddress, client_names:list[ClientName]) -> str:
+def get_name(addr:tuple[str, int], client_names:list[ClientName]) -> str:
     """gets the name of the ip in addr"""
     #check all saved names for ip
     #NOTE changing to a sorted list and faster search algorithm could be a good idea for *large* lists of names
@@ -77,7 +77,7 @@ def get_name(addr:_RetAddress, client_names:list[ClientName]) -> str:
             return client_name.name
     return UNSET_NAME_MSG.format(addr[0])
 
-def has_name(addr:_RetAddress, client_names:list[ClientName]) -> bool:
+def has_name(addr:tuple[str, int], client_names:list[ClientName]) -> bool:
     """check if an address has a name in client_names list"""
     return get_name(addr, client_names) != UNSET_NAME_MSG.format(addr[0])
 
@@ -89,7 +89,7 @@ def save_names(client_names:list[ClientName]):
     log_message(LOG_FILE,"saved ip names to file")
 
 
-def send_message(to_send:str,client:SocketType,addr:_RetAddress):
+def send_message(to_send:str,client:SocketType,addr:tuple[str, int]):
     """sends a message to the client and logs the activity"""
     ORIG = to_send
     
@@ -110,7 +110,7 @@ def get_port() -> int:
             print("Invalid port number")
             pass
 
-def send_file(filename:str, client:SocketType, addr:_RetAddress):
+def send_file(filename:str, client:SocketType, addr:tuple[str, int]):
     """sends a file to the client"""
     with open(filename, 'rb') as file_to_send:
         #setup
