@@ -5,7 +5,9 @@ from socket import SocketType
 import _thread
 
 class MessageReceiver:
+    """class for handling the receiving of messages from a server for a client"""
     def __init__(self, server:SocketType) -> None:
+        """initialise receiver and start receiving messages"""
         self.server = server
         self.receive_messages()
 
@@ -13,6 +15,7 @@ class MessageReceiver:
         """handles messages received from host"""
 
         def close():
+            """log a close message and interrupt main thread"""
             log_message(CLIENT_LOG_FILE, 'message thread closing')
             _thread.interrupt_main()
 
@@ -27,8 +30,10 @@ class MessageReceiver:
                     close()
                     break
                 elif msg == 'begin ft':
+                    #special case for file transfers
                     recv_file(self.server, FILESENDINGBUFFER)
                 
         except Exception as x:
+            #log errors and close gracefully
             log_message(CLIENT_LOG_FILE, f"exception in message thread: {x}")
             close()
