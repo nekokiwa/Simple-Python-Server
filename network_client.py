@@ -21,13 +21,13 @@ def main():
     log_message(CLIENT_LOG_FILE, f"----------------------\np:{port}||ip:{host_ip}")
 
     #setup socket
-    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    s.connect((host_ip,port))
+    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server.connect((host_ip,port))
 
     to_close = False
 
     #start message handling thread
-    new_thread(MessageReceiver, (s, ) )
+    new_thread(MessageReceiver, (server, ) )
     
     #message loop
     while not to_close:  
@@ -37,7 +37,7 @@ def main():
 
             #send message
             log_message(CLIENT_LOG_FILE, f'sending "{to_send}" to server')
-            s.send(to_send)
+            server.send(to_send)
             if to_send == 'close'.encode('utf-8'):
                 #break message loop on close message
                 to_close = True
@@ -47,7 +47,7 @@ def main():
         except KeyboardInterrupt as ki:
             log_message(CLIENT_LOG_FILE, f"Process interrupted. this may have been done by the receiver thread or user themself. Exception: {ki}")
             to_close = True
-            s.send('close'.encode('utf-8'))
+            server.send('close'.encode('utf-8'))
             break
     log_message(CLIENT_LOG_FILE, 'client process closed')
 
