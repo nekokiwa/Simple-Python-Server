@@ -11,15 +11,13 @@ class MessageReceiver:
         self.server = server
         self.receive_messages()
 
+    def close(self):
+        """log a close message and interrupt main thread"""
+        log_message(CLIENT_LOG_FILE, 'message thread closing')
+        _thread.interrupt_main()
+
     def receive_messages(self):
         """handles messages received from host"""
-
-        def close():
-            """log a close message and interrupt main thread"""
-            log_message(CLIENT_LOG_FILE, 'message thread closing')
-            _thread.interrupt_main()
-
-
         try:
             while True:#receive message
                 msg = self.server.recv(RECEIVE_BUFFER).decode('utf-8')
@@ -27,7 +25,7 @@ class MessageReceiver:
                     pass#do nothing if no message received
                 log_message(CLIENT_LOG_FILE, f'received message: {msg}')
                 if msg == 'close':
-                    close()
+                    self.close()
                     break
                 elif msg == 'begin ft':
                     #special case for file transfers
@@ -36,4 +34,4 @@ class MessageReceiver:
         except Exception as x:
             #log errors and close gracefully
             log_message(CLIENT_LOG_FILE, f"exception in message thread: {x}")
-            close()
+            self.close()
