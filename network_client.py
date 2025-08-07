@@ -36,7 +36,7 @@ def main():
             to_send = input("enter a message to send to host:\n").encode('utf-8')
 
             #send message
-            log_message(CLIENT_LOG_FILE, f'sending "{to_send}" to server')
+            log_message(CLIENT_LOG_FILE, f'sending "{to_send.decode('utf-8')}" to server')
             server.send(to_send)
             if to_send == 'close'.encode('utf-8'):
                 #break message loop on close message
