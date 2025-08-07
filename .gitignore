@@ -1,4 +1,7 @@
-
+#release building
+build/
+dist/
+*.spec
 
 #ignore log
 log.txt
