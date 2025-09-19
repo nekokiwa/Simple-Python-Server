@@ -94,11 +94,12 @@ class ClientHandler:
                 message = f"Command ({cmd}) received."
         return message
     
-    def handle_command_download(self):
+    def handle_command_download(self) -> str:
+        """helper method for the handle command method, to help handle downloads. returns the message to return"""
         message = 'download error' #default download message
         addr = self.holder.addr
         client = self.holder.sock
-        
+
         needs_name = True
         while needs_name:
             self.send_msg("please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
