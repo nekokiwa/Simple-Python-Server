@@ -104,8 +104,8 @@ class ClientHandler:
 
         needs_name = True
         while needs_name:
-            self.send_msg("please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
-            filename = self.recv_msg()
+            filename = self.recv_msg(
+                "please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
 
             if filename == "CANCEL":
                 #cancel getting name
