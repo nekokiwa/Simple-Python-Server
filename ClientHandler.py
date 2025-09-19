@@ -10,18 +10,18 @@ from network_utilities import *
 class ClientHandler:
     """object that handles a client connection including sending and receieving messages"""
 
-    def __init__(self, holder:ClientHolder, connected_clients, client_names) -> None:
+    def __init__(self, holder:ClientHolder, connected_clients:list[ClientHolder], client_names:list[ClientName]) -> None:
         """initialise client handler with server and client info and start handling the client"""
 
-        self.holder = holder
-        self.has_client = True
+        self.holder:ClientHolder = holder
+        self.has_client:bool = True
         #automatically start handling client
         log_message(LOG_FILE,f"connection opened from {holder.addr}")
         self.handle_client(connected_clients, client_names)
 
-    def close_client(self, connected_clients):
+    def close_client(self, connected_clients:list[ClientHolder]):
         """closes the client connection"""
-        addr = self.holder.addr
+        addr:tuple[str, int] = self.holder.addr
 
         self.has_client = False
         connected_clients.remove(self.holder)
@@ -37,18 +37,17 @@ class ClientHandler:
     
     def recv_msg(self, prompt:str|None=None):
         """wrapper function to receive a message from the client being handled"""
-        client = self.holder.sock
+        client:SocketType = self.holder.sock
         if prompt:
             self.send_msg(prompt)
-        msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
+        msg:str = client.recv(RECEIVE_BUFFER).decode('utf-8')
         log_message(LOG_FILE, f"received: ({msg}) from {self.holder.addr}")
         return msg
 
-    def handle_command(self, cmd:str, client_names, connected_clients) -> str:
+    def handle_command(self, cmd:str, client_names:list[ClientName], connected_clients:list[ClientHolder]) -> str:
         """handles the given command and returns the message to send"""
-        addr = self.holder.addr
-        client = self.holder.sock
-        message = "Error message" #default message in case command handler did not specify
+        addr:tuple[str, int] = self.holder.addr
+        message:str = "Error message" #default message in case command handler did not specify
 
         match cmd.lower(): #match lower to ignore case
             case "hello":
@@ -88,11 +87,11 @@ class ClientHandler:
                 message = f"Command ({cmd}) received."
         return message
     
-    def handle_send_to(self, connected_clients, client_names) -> str:
+    def handle_send_to(self, connected_clients:list[ClientHolder], client_names:list[ClientName]) -> str:
         """handles sending a message to another client, returns a confirmation or cancellation message"""
-        needs_target = True
-
+        needs_target:bool = True
         target:ClientHolder
+
         while needs_target:
             name = self.recv_msg("enter the name or ip of the client you wish to send to")
             if name == 'cancel':
@@ -107,20 +106,19 @@ class ClientHandler:
                     needs_target = False
                     break
             
-        
-        to_send = self.recv_msg("enter the message you wish to send")
+        to_send:str = self.recv_msg("enter the message you wish to send")
         send_message(to_send, target.sock, target.addr) # type: ignore
         return "message sent"
 
     def handle_command_download(self) -> str:
         """helper method for the handle command method, to help handle downloads. returns the message to return"""
-        message = 'download error' #default download message
-        addr = self.holder.addr
-        client = self.holder.sock
+        message:str = 'download error' #default download message
+        addr:tuple[str, int] = self.holder.addr
+        client:SocketType = self.holder.sock
 
-        needs_name = True
+        needs_name:bool = True
         while needs_name:
-            filename = self.recv_msg(
+            filename:str = self.recv_msg(
                 "please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
 
             if filename == "CANCEL":
@@ -134,9 +132,9 @@ class ClientHandler:
             self.send_msg(filename)
 
             #get and send filesize to client
-            path = ACCESSIBLE_FILES_FOLDER + filename
+            path:str = ACCESSIBLE_FILES_FOLDER + filename
             try:
-                filesize = os.stat(path).st_size
+                filesize:int = os.stat(path).st_size
                 self.send_msg(str(filesize))
 
                 #only initiate transfer if handshake completes properly
@@ -150,12 +148,12 @@ class ClientHandler:
                 self.send_msg("File transfer failed: File does not exist")
         return message
 
-    def handle_client(self, connected_clients, client_names):
+    def handle_client(self, connected_clients:list[ClientHolder], client_names:list[ClientName]):
         """function for handling a client meant to be used in a thread"""
         #setup
-        holder = self.holder
-        client = holder.sock
-        addr = holder.addr
+        holder:ClientHolder = self.holder
+        client:SocketType = holder.sock
+        addr:tuple[str, int] = holder.addr
         connected_clients.append(holder)
 
         #receive messages
@@ -166,7 +164,7 @@ class ClientHandler:
             #loop for as long as client is connected
             while self.has_client:
                 #check for messages
-                msg = self.recv_msg()
+                msg:str = self.recv_msg()
                 if not msg:
                     #do nothing if no message sent
                     break

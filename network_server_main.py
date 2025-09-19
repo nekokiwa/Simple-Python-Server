@@ -39,7 +39,7 @@ def main():
         try:
             #establish connection
             client, addr = s.accept()
-            holder = ClientHolder(client, addr)
+            holder:ClientHolder = ClientHolder(client, addr)
             #handle client
             _thread.start_new_thread(ClientHandler,(holder, connected_clients, client_names))
 

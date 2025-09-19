@@ -8,7 +8,7 @@ class MessageReceiver:
     """class for handling the receiving of messages from a server for a client"""
     def __init__(self, server:SocketType) -> None:
         """initialise receiver and start receiving messages"""
-        self.server = server
+        self.server:SocketType = server
         self.receive_messages()
 
     def close(self):
@@ -20,7 +20,7 @@ class MessageReceiver:
         """handles messages received from host"""
         try:
             while True:#receive message
-                msg = self.server.recv(RECEIVE_BUFFER).decode('utf-8')
+                msg:str = self.server.recv(RECEIVE_BUFFER).decode('utf-8')
                 if not msg:
                     pass#do nothing if no message received
                 log_message(CLIENT_LOG_FILE, f'received message: {msg}')

@@ -12,9 +12,9 @@ import socket
 
 
 
-def server_control(host, port, connected_clients, client_names):
+def server_control(host:str, port:int, connected_clients:list[ClientHolder], client_names:list[ClientName]):
     while True:
-        cmd = input("enter a command for the server:\n")
+        cmd:str = input("enter a command for the server:\n")
         log_message(LOG_FILE,f"server command: ({cmd}) received")
 
         match cmd.lower():
@@ -25,27 +25,27 @@ def server_control(host, port, connected_clients, client_names):
                 socket.socket(socket.AF_INET,socket.SOCK_STREAM).connect((host,port))
                 break
             case 'log':
-                msg = input("please enter the message you wish to log:\n")
+                msg:str = input("please enter the message you wish to log:\n")
                 log_message(LOG_FILE,f'CUSTOM LOG: {msg}')
             case 'help':
                 #print help message
                 print(unset(SERVER_HELP_MESSAGE))
             case 'clients':
-                i = 0
+                index:int = 0
                 print('clients list:')
                 for cli in connected_clients:
                     addr = cli.addr
-                    print(f"{i}:({get_name(addr, client_names)}:{addr})")
-                    i+=1
+                    print(f"{index}:({get_name(addr, client_names)}:{addr})")
+                    index += 1
             case 'names':
                 print("saved names:")
                 for name in client_names:
                     print(f"{name.ip}:{name.name}")
             case 'send':
                 try:
-                    i = int(input("enter the index of the client you wish to send to\n"))
+                    index:int = int(input("enter the index of the client you wish to send to\n"))
                     try:
-                        cli:ClientHolder = connected_clients[i]
+                        cli:ClientHolder = connected_clients[index]
                         msg = input("enter the message you wish to send:\n")
                         send_message(msg,cli.sock,cli.addr)
                     except IndexError:

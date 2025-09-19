@@ -16,15 +16,15 @@ def main():
     """setup client process and connect to a server defined by user input"""
   
     #get ip and port
-    host_ip = get_ip()
-    port = get_port(CLIENT_LOG_FILE)
+    host_ip:str = get_ip()
+    port:int = get_port(CLIENT_LOG_FILE)
     log_message(CLIENT_LOG_FILE, f"----------------------\np:{port}||ip:{host_ip}")
 
     #setup socket
-    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server:SocketType = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     server.connect((host_ip,port))
 
-    to_close = False
+    to_close:bool = False
 
     #start message handling thread
     new_thread(MessageReceiver, (server, ) )
@@ -33,7 +33,7 @@ def main():
     while not to_close:  
         #get user input
         try:
-            to_send = input("enter a message to send to host:\n").encode('utf-8')
+            to_send:bytes = input("enter a message to send to host:\n").encode('utf-8')
 
             #send message
             log_message(CLIENT_LOG_FILE, f'sending "{to_send.decode('utf-8')}" to server')
