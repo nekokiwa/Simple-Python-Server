@@ -75,36 +75,7 @@ class ClientHandler:
                 #turing complete game network tests needed this for some reason
                 message = 'close'
             case 'download':
-                needs_name = True
-                while needs_name:
-                    self.send_msg("please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
-                    filename = self.recv_msg()
-
-                    if filename == "CANCEL":
-                        #cancel getting name
-                        message = "download cancelled"
-                        needs_name = False
-                        break
-                
-                    #initiate transfer handshake 
-                    self.send_msg("begin ft")
-                    self.send_msg(filename)
-
-                    #get and send filesize to client
-                    path = ACCESSIBLE_FILES_FOLDER + filename
-                    try:
-                        filesize = os.stat(path).st_size
-                        self.send_msg(str(filesize))
-
-                        #only initiate transfer if handshake completes properly
-                        if self.recv_msg() != 'ready':
-                            message = "File transfer cancelled or failed."
-                        else: 
-                            send_file(path, client, addr)
-                            message = "\n\nFile transfer finished!"
-                        needs_name = False
-                    except FileNotFoundError as fnf:
-                        self.send_msg("File transfer failed: File does not exist")
+                message = self.handle_command_download()
             case 'cat gay':
                 # :3
                 message = "mrow mrow mrrrp nya :3"
@@ -121,6 +92,43 @@ class ClientHandler:
             case _:
                 #default message for unknown commands
                 message = f"Command ({cmd}) received."
+        return message
+    
+    def handle_command_download(self):
+        message = 'download error' #default download message
+        addr = self.holder.addr
+        client = self.holder.sock
+        
+        needs_name = True
+        while needs_name:
+            self.send_msg("please enter the name of the file to download, including the extension, or 'CANCEL' to cancel")
+            filename = self.recv_msg()
+
+            if filename == "CANCEL":
+                #cancel getting name
+                message = "download cancelled"
+                needs_name = False
+                break
+        
+            #initiate transfer handshake 
+            self.send_msg("begin ft")
+            self.send_msg(filename)
+
+            #get and send filesize to client
+            path = ACCESSIBLE_FILES_FOLDER + filename
+            try:
+                filesize = os.stat(path).st_size
+                self.send_msg(str(filesize))
+
+                #only initiate transfer if handshake completes properly
+                if self.recv_msg() != 'ready':
+                    message = "File transfer cancelled or failed."
+                else: 
+                    send_file(path, client, addr)
+                    message = "\n\nFile transfer finished!"
+                needs_name = False
+            except FileNotFoundError as fnf:
+                self.send_msg("File transfer failed: File does not exist")
         return message
 
     def handle_client(self, connected_clients, client_names):
