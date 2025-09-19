@@ -44,7 +44,7 @@ class ClientHandler:
         log_message(LOG_FILE, f"received: ({msg}) from {self.holder.addr}")
         return msg
 
-    def handle_command(self, cmd:str, client_names) -> str:
+    def handle_command(self, cmd:str, client_names, connected_clients) -> str:
         """handles the given command and returns the message to send"""
         addr = self.holder.addr
         client = self.holder.sock
@@ -82,20 +82,36 @@ class ClientHandler:
                 # :3
                 message = "mrow mrow mrrrp nya :3"
             case 'send to':
-                #TODO implement send to
-                needs_target = True
-                needs_msg = True
-
-                while needs_target:
-                    self.send_msg("please enter the name or ip of the client to send a message to")
-
-                while needs_msg:
-                    self.send_msg("please enter the ")
+                message = self.handle_send_to(connected_clients, client_names)
             case _:
                 #default message for unknown commands
                 message = f"Command ({cmd}) received."
         return message
     
+    def handle_send_to(self, connected_clients, client_names) -> str:
+        """handles sending a message to another client, returns a confirmation or cancellation message"""
+        needs_target = True
+
+        target:ClientHolder
+        while needs_target:
+            name = self.recv_msg("enter the name or ip of the client you wish to send to")
+            if name == 'cancel':
+                return "message sending canceled"
+            for clientname in client_names:
+                if name == clientname.name:
+                    name = clientname.ip
+                    break
+            for client in connected_clients:
+                if name == client.addr[0]:
+                    target = client
+                    needs_target = False
+                    break
+            
+        
+        to_send = self.recv_msg("enter the message you wish to send")
+        send_message(to_send, target.sock, target.addr) # type: ignore
+        return "message sent"
+
     def handle_command_download(self) -> str:
         """helper method for the handle command method, to help handle downloads. returns the message to return"""
         message = 'download error' #default download message
@@ -161,7 +177,7 @@ class ClientHandler:
                     self.send_msg('close')
                     self.close_client(connected_clients)
                 else:
-                    to_send = self.handle_command(msg, client_names)
+                    to_send = self.handle_command(msg, client_names, connected_clients)
                     self.send_msg(to_send)
                     if to_send == 'close':
                         self.close_client(connected_clients)
