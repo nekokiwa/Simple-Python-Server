@@ -35,9 +35,11 @@ class ClientHandler:
         """wrapper function to send a message to the client being handled"""
         send_message(to_send,self.holder.sock,self.holder.addr)
     
-    def recv_msg(self):
+    def recv_msg(self, prompt:str|None=None):
         """wrapper function to receive a message from the client being handled"""
         client = self.holder.sock
+        if prompt:
+            self.send_msg(prompt)
         msg = client.recv(RECEIVE_BUFFER).decode('utf-8')
         log_message(LOG_FILE, f"received: ({msg}) from {self.holder.addr}")
         return msg
