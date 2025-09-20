@@ -94,7 +94,7 @@ class ClientHandler:
 
         while needs_target:
             name = self.recv_msg("enter the name or ip of the client you wish to send to")
-            if name == 'cancel':
+            if name.lower() == 'cancel':
                 return "message sending canceled"
             for clientname in client_names:
                 if name == clientname.name:
