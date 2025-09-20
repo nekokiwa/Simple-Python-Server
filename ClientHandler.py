@@ -107,6 +107,11 @@ class ClientHandler:
                     break
             
         to_send:str = self.recv_msg("enter the message you wish to send")
+        if has_name(self.holder.addr, client_names):
+            to_send = f"{get_name(self.holder.addr, client_names)}: \"{to_send}\""
+        else:
+            to_send = f"Unnamed: \"{to_send}\""
+            
         send_message(to_send, target.sock, target.addr) # type: ignore
         return "message sent"
 
