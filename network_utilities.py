@@ -4,6 +4,23 @@ from configfile import *
 from socket import SocketType
 import os, sys
 
+def read_client_name(line:str, client_names:list[ClientName]):
+    """helper function for load_names, takes a name and ip from a str and adds it to client_names"""
+    ip = ""
+    name = ""
+    getting_ip = True
+    for char in line:
+        if getting_ip:
+            if char == ':': #ip separated from name by a colon
+                getting_ip = False
+            else:
+                ip += char
+        else:
+            if char == '\n':
+                break
+        name += char
+    if not getting_ip: # check to make sure ip was successfully parsed
+        client_names.append(ClientName(ip,name))
 
 def load_names(client_names:list[ClientName], filename:str):
     """loads the names from file into client names list"""
@@ -11,21 +28,7 @@ def load_names(client_names:list[ClientName], filename:str):
         with open(filename,'r') as file:
             lines = file.readlines()
             for line in lines: #each name is separated by lineberaks, one name per line
-                ip = ""
-                name = ""
-                getting_ip = True
-                for char in line:
-                    if getting_ip:
-                        if char == ':': #ip separated from name by a colon
-                            getting_ip = False
-                        else:
-                            ip += char
-                    else:
-                        if char == '\n':
-                            break
-                    name += char
-                if not getting_ip: # check to make sure ip was successfully parsed
-                    client_names.append(ClientName(ip,name))
+                read_client_name(line, client_names)
     except FileNotFoundError as fnf:
         #create names.txt if it doesn't exist and retry
         open(filename, "w").close()
