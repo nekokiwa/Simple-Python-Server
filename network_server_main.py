@@ -17,11 +17,11 @@ def main():
     connected_clients:list[ClientHolder] = []
     load_names(client_names, NAMES_FILE)
     port:int = PORT_TO_USE
-    s:SocketType = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server:SocketType = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host:str = socket.gethostname()
     log_message(LOG_FILE,f'\n##########################\nstarting new session with:\nip:{host}||port:{port}')
-    s.bind((host,port))
-    s.listen(100)
+    server.bind((host,port))
+    server.listen(100)
     running:bool = True
   
     #called on script exit
@@ -37,7 +37,7 @@ def main():
     while running:
         try:
             #establish connection
-            client, addr = s.accept()
+            client, addr = server.accept()
             holder:ClientHolder = ClientHolder(client, addr)
             #handle client
             _thread.start_new_thread(ClientHandler,(holder, connected_clients, client_names))
