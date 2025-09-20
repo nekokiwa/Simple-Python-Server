@@ -1,6 +1,5 @@
 
 from configfile import *
-from configfile import LOG_FILE
 from network_utilities import *
 from ClientHandler import *
 from network_server_controller import server_control

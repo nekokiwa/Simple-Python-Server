@@ -3,7 +3,6 @@
 from configfile import *
 from network_utilities import *
 from MessageReceiver import *
-import _thread
 
 from _thread import start_new_thread as new_thread
 import time
