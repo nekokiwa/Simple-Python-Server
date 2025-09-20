@@ -139,7 +139,7 @@ def send_file(filename:str, client:SocketType, addr:tuple[str, int]):
         filesize = os.stat(filename).st_size
         bytes_read = 0
 
-        log_message(LOG_FILE, f"filesize: ({filesize})\nbeginning file transfer...)")
+        log_message(LOG_FILE, f"filesize: ({filesize})\nbeginning file transfer...")
         while bytes_read < filesize:
             to_send = file_to_send.read(FILESENDINGBUFFER)
             bytes_read = file_to_send.tell()
